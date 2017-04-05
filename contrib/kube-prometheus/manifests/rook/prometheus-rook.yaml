@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: Prometheus
+metadata:
+  name: rook
+  labels:
+    prometheus: rook
+spec:
+  version: v1.5.2
+  serviceMonitorSelector:
+    matchLabels:
+      app: rook
+  resources:
+    requests:
+      memory: 400Mi
+  alerting:
+    alertmanagers:
+    - namespace: monitoring
+      name: alertmanager-main
+      port: web

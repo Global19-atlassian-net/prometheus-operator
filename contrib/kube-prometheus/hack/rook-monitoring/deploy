@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [ -z "${KUBECONFIG}" ]; then
+    KUBECONFIG=~/.kube/config
+fi
+
+if [ -z "${NAMESPACE}" ]; then
+    NAMESPACE=rook
+fi
+
+kubectl --namespace "$NAMESPACE" --kubeconfig="$KUBECONFIG" apply -f manifests/rook/prometheus-rook-service.yaml
+
+# `kubectl apply` is currently not working for third party resources so we are
+# using `kubectl create` here for the time being.
+# (https://github.com/kubernetes/kubernetes/issues/29542)
+kubectl --namespace "$NAMESPACE" --kubeconfig="$KUBECONFIG" create -f manifests/rook/prometheus-rook.yaml
+kubectl --namespace "$NAMESPACE" --kubeconfig="$KUBECONFIG" create -f manifests/rook/prometheus-rook-servicemonitor.yaml
