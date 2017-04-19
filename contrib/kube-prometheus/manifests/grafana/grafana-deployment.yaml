@@ -53,4 +53,4 @@ spec:
         emptyDir: {}
       - name: grafana-dashboards
         configMap:
-          name: grafana-dashboards-castle
+          name: grafana-dashboards
