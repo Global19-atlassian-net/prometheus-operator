@@ -19,9 +19,13 @@ find manifests/prometheus -type f ! -name prometheus-k8s-roles.yaml ! -name prom
 kubectl delete -f manifests/prometheus/prometheus-k8s-roles.yaml
 kubectl delete -f manifests/prometheus/prometheus-k8s-role-bindings.yaml
 kctl delete -f manifests/alertmanager
+# kctl delete -f manifests/autosupport
 
 # Hack: wait a bit to let the controller delete the deployed Prometheus server.
-sleep 5
+sleep 10
 
 kctl delete -f manifests/prometheus-operator
+kubectl delete namespace "$NAMESPACE"
 
+# ensure the Prometheus PV is cleaned up
+for pv in $(kubectl get pv | grep 'prometheus-k8s-db' | awk '{print $1}'); do kubectl delete pv ${pv}; done
